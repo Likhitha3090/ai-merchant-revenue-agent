@@ -1,0 +1,103 @@
+{
+  "summary": {
+    "total_tests": 10,
+    "valid_recommendations": 8,
+    "recommendation_rate": 80.0,
+    "budget_compliant": 8,
+    "budget_compliance_rate": 80.0,
+    "in_stock": 8,
+    "stock_rate": 80.0
+  },
+  "results": [
+    {
+      "query": "I need something for coding under 1000",
+      "success": true,
+      "product_id": "P003",
+      "product_name": "TechPro Wireless Mouse",
+      "price": 799,
+      "stock": 25,
+      "budget_ok": true,
+      "in_stock": true
+    },
+    {
+      "query": "I need a laptop for programming",
+      "success": true,
+      "product_id": "P004",
+      "product_name": "CodeBook Laptop 14",
+      "price": 55999,
+      "stock": 10,
+      "budget_ok": true,
+      "in_stock": true
+    },
+    {
+      "query": "I need a tablet for online classes under 20000",
+      "success": true,
+      "product_id": "P010",
+      "product_name": "StudyTab Tablet 10",
+      "price": 18999,
+      "stock": 14,
+      "budget_ok": true,
+      "in_stock": true
+    },
+    {
+      "query": "I need a monitor for coding",
+      "success": true,
+      "product_id": "P005",
+      "product_name": "UltraView 24 Monitor",
+      "price": 11999,
+      "stock": 15,
+      "budget_ok": true,
+      "in_stock": true
+    },
+    {
+      "query": "I need headphones for gaming",
+      "success": true,
+      "product_id": "P001",
+      "product_name": "SoundMax Wireless Headphones",
+      "price": 2499,
+      "stock": 20,
+      "budget_ok": true,
+      "in_stock": true
+    },
+    {
+      "query": "I need something for online meetings",
+      "success": true,
+      "product_id": "P013",
+      "product_name": "SmartOffice Webcam Pro",
+      "price": 2999,
+      "stock": 16,
+      "budget_ok": true,
+      "in_stock": true
+    },
+    {
+      "query": "I need a keyboard for programming",
+      "success": true,
+      "product_id": "P006",
+      "product_name": "TypePro Mechanical Keyboard",
+      "price": 2299,
+      "stock": 18,
+      "budget_ok": true,
+      "in_stock": true
+    },
+    {
+      "query": "I need a wireless mouse for office work",
+      "success": true,
+      "product_id": "P003",
+      "product_name": "TechPro Wireless Mouse",
+      "price": 799,
+      "stock": 25,
+      "budget_ok": true,
+      "in_stock": true
+    },
+    {
+      "query": "I need a quantum computer under 500",
+      "success": false,
+      "reason": "No products match your requirements."
+    },
+    {
+      "query": "I need a refrigerator under 10000",
+      "success": false,
+      "reason": "No products match your requirements."
+    }
+  ]
+}

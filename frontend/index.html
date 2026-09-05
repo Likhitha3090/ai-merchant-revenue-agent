@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Merchant Revenue Agent</title>
+
+    <!-- Razorpay Checkout -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+            font-size: 32px;
+        }
+
+        header p {
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 110px;
+            padding: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            resize: vertical;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        button {
+            border: none;
+            border-radius: 9px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .primary {
+            width: 100%;
+            margin-top: 12px;
+            background: #111827;
+            color: white;
+        }
+
+        .secondary {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .success-btn {
+            background: #16a34a;
+            color: white;
+        }
+
+        .outline-btn {
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .product {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 15px;
+        }
+
+        .product h3 {
+            margin: 0 0 8px;
+        }
+
+        .price {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .muted {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            margin: 3px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 14px 0;
+            gap: 15px;
+        }
+
+        .cart-info {
+            flex: 1;
+        }
+
+        .cart-name {
+            font-weight: bold;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .quantity-controls button {
+            padding: 5px 9px;
+            font-size: 13px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .empty {
+            color: #6b7280;
+            padding: 15px 0;
+        }
+
+        #message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .message-info {
+            display: block !important;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .message-success {
+            display: block !important;
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .message-error {
+            display: block !important;
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status-card {
+            padding: 16px;
+            border-radius: 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+
+        .status-card h3 {
+            margin: 8px 0;
+        }
+
+        .status-card p {
+            margin: 8px 0;
+        }
+
+        .status-card.warning {
+            background: #fff7ed;
+            border-color: #fed7aa;
+        }
+
+        .status-card.error {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .status-card.success {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .status-icon {
+            font-size: 28px;
+        }
+
+        .primary-btn {
+            background: #111827;
+            color: white;
+        }
+
+        /* ========================= */
+        /* UPSELL */
+        /* ========================= */
+
+        .upsell-card {
+            border: 1px solid #dbeafe;
+            background: linear-gradient(135deg, #f8fbff, #ffffff);
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .upsell-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .upsell-question {
+            color: #4b5563;
+            margin-bottom: 15px;
+        }
+
+        .upsell-product {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            background: white;
+        }
+
+        .upsell-product h3 {
+            margin: 0 0 6px;
+        }
+
+        .upsell-category {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            color: #374151;
+            font-size: 12px;
+            margin: 5px 0 8px;
+        }
+
+        .upsell-actions {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* ========================= */
+        /* REVENUE IMPACT */
+        /* ========================= */
+
+        .revenue-box {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            background: #f9fafb;
+        }
+
+        .revenue-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .revenue-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .revenue-increase {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f0fdf4;
+            color: #15803d;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        @media (max-width: 800px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ========================= -->
+    <!-- HEADER -->
+    <!-- ========================= -->
+
+    <header>
+        <h1>🤖 AI Merchant Revenue Agent</h1>
+        <p>
+            AI-powered product discovery, contextual upselling and secure checkout
+        </p>
+    </header>
+
+    <div class="grid">
+
+        <!-- ========================= -->
+        <!-- LEFT SIDE -->
+        <!-- ========================= -->
+
+        <div>
+
+            <!-- CUSTOMER REQUEST -->
+
+            <div class="card">
+
+                <h2>🧠 What are you looking for?</h2>
+
+                <textarea
+                    id="customerQuery"
+                    placeholder="Example: I need something for coding under ₹1000"
+                ></textarea>
+
+                <button
+                    id="recommendButton"
+                    class="primary"
+                    onclick="getRecommendation()"
+                >
+                    Find Products
+                </button>
+
+                <div id="message"></div>
+
+            </div>
+
+            <!-- AI RECOMMENDATION -->
+
+            <div
+                id="recommendationSection"
+                class="card hidden"
+            >
+
+                <h2>✨ AI Recommendation</h2>
+
+                <div id="recommendationCard"></div>
+
+            </div>
+
+            <!-- UPSELL -->
+
+            <div
+                id="upsellSection"
+                class="card hidden"
+            >
+
+                <h2>💡 Complete Your Setup</h2>
+
+                <div id="upsellCard"></div>
+
+            </div>
+
+            <!-- REVENUE IMPACT -->
+
+            <div
+                id="revenueImpactSection"
+                class="card hidden"
+            >
+
+                <h2>💰 AI Revenue Impact</h2>
+
+                <div class="revenue-box">
+
+                    <div class="revenue-row">
+                        <span>Original purchase</span>
+                        <strong id="originalPurchaseValue">
+                            ₹0
+                        </strong>
+                    </div>
+
+                    <div class="revenue-row">
+                        <span>AI cross-sell</span>
+                        <strong id="aiCrossSellValue">
+                            ₹0
+                                                    </strong>
+                    </div>
+
+                    <hr
+                        style="
+                            border:none;
+                            border-top:1px solid #e5e7eb;
+                            margin:12px 0;
+                        "
+                    >
+
+                    <div class="revenue-total">
+                        <span>Updated basket</span>
+
+                        <strong id="updatedBasketValue">
+                            ₹0
+                        </strong>
+                    </div>
+
+                    <div
+                        id="basketIncreaseValue"
+                        class="revenue-increase"
+                    >
+                        Basket increase: +0%
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- RIGHT SIDE -->
+        <!-- ========================= -->
+
+        <div>
+
+            <!-- CART -->
+
+            <div class="card">
+
+                <h2>🛒 Your Cart</h2>
+
+                <div id="cartItems">
+
+                    <div class="empty">
+                        Your cart is empty.
+                    </div>
+
+                </div>
+
+                <div class="cart-total">
+                    <span>Total</span>
+
+                    <span id="cartTotal">
+                        ₹0
+                    </span>
+                </div>
+
+                <button
+                    id="payButton"
+                    class="primary"
+                    onclick="startPayment()"
+                    disabled
+                >
+                    Pay ₹0
+                </button>
+
+            </div>
+
+            <!-- ORDER STATUS -->
+
+            <div class="card">
+
+                <h2>📦 Order Status</h2>
+
+                <div
+                    id="orderStatus"
+                    class="muted"
+                >
+                    No order created yet.
+                </div>
+
+                <!-- RETRY PAYMENT -->
+
+                <div
+                    id="retrySection"
+                    style="
+                        display:none;
+                        margin-top:20px;
+                    "
+                >
+
+                    <div class="status-card warning">
+
+                        <div class="status-icon">
+                            🔁
+                        </div>
+
+                        <h3>
+                            Payment Not Completed
+                        </h3>
+
+                        <p>
+                            Your order is still pending.
+                            You can try the payment again.
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="retryPayment()"
+                            class="primary-btn"
+                        >
+                            Retry Payment
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    // =========================================================
+    // APPLICATION STATE
+    // =========================================================
+
+    let cart = [];
+
+    let basePurchaseValue = 0;
+
+    let aiCrossSellValue = 0;
+
+
+    // =========================================================
+    // UTILITY
+    // =========================================================
+
+    function showMessage(
+        text,
+        type = "info"
+    ) {
+
+        const message =
+            document.getElementById("message");
+
+
+        message.className = "";
+
+
+        message.classList.add(
+
+            type === "success"
+                ? "message-success"
+
+                : type === "error"
+                    ? "message-error"
+
+                    : "message-info"
+        );
+
+
+        message.innerText = text;
+    }
+
+
+    function formatPrice(amount) {
+
+        return "₹" +
+            Number(amount).toLocaleString("en-IN");
+    }
+
+
+    // =========================================================
+    // AI RECOMMENDATION
+    // =========================================================
+
+    async function getRecommendation() {
+
+        const queryInput =
+            document.getElementById(
+                "customerQuery"
+            );
+
+
+        const recommendButton =
+            document.getElementById(
+                "recommendButton"
+            );
+
+
+        const query =
+            queryInput.value.trim();
+
+
+        if (!query) {
+
+            showMessage(
+                "Please enter what you are looking for.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        recommendButton.disabled = true;
+
+
+        showMessage(
+            "🧠 AI is understanding your request...",
+            "info"
+        );
+
+
+        // Reset previous recommendation data.
+
+        document
+            .getElementById(
+                "recommendationSection"
+            )
+            .classList.add("hidden");
+
+
+        document
+            .getElementById(
+                "upsellSection"
+            )
+            .classList.add("hidden");
+
+
+        document
+            .getElementById(
+                "revenueImpactSection"
+            )
+            .classList.add("hidden");
+
+
+        basePurchaseValue = 0;
+
+        aiCrossSellValue = 0;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/recommend",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                query: query
+                            })
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Recommendation API returned HTTP " +
+                    response.status
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "Recommendation response:",
+                data
+            );
+
+
+            const agentResult =
+                data.recommendation;
+
+
+            if (!agentResult.success) {
+
+                showMessage(
+                    agentResult.message ||
+                    "No suitable product found.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const recommendation =
+                agentResult.recommendation;
+
+
+            const productId =
+                recommendation.recommended_product_id;
+
+
+            // Get actual catalog.
+
+            const productsResponse =
+                await fetch("/products");
+
+
+            if (!productsResponse.ok) {
+
+                throw new Error(
+                    "Unable to load product catalog."
+                );
+            }
+
+
+            const productsData =
+                await productsResponse.json();
+
+
+            const product =
+                productsData.products.find(
+                    p => p.id === productId
+                );
+
+
+            if (!product) {
+
+                throw new Error(
+                    "Recommended product was not found in catalog."
+                );
+            }
+
+
+            // Display AI recommendation.
+
+            showRecommendation(
+                product,
+                recommendation.reason
+            );
+
+
+            // Record original recommended product.
+
+            basePurchaseValue =
+                Number(product.price);
+
+            aiCrossSellValue = 0;
+
+
+            // Load contextual upsell.
+
+            await loadUpsell(
+                product.id
+            );
+
+
+            showMessage(
+                "✅ Recommendation ready.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Recommendation error:",
+                error
+            );
+
+
+            showMessage(
+                "❌ " + error.message,
+                "error"
+            );
+
+
+        } finally {
+
+            recommendButton.disabled = false;
+
+        }
+    }
+
+
+    // =========================================================
+    // DISPLAY RECOMMENDATION
+    // =========================================================
+
+    function showRecommendation(
+        product,
+        reason
+    ) {
+
+        const section =
+            document.getElementById(
+                "recommendationSection"
+            );
+
+
+        const card =
+            document.getElementById(
+                "recommendationCard"
+            );
+
+
+        card.innerHTML = `
+
+            <div class="product">
+
+                <h3>
+                    ${product.name}
+                </h3>
+
+                <div class="price">
+                    ${formatPrice(product.price)}
+                </div>
+
+                <p>
+                    ${product.description}
+                </p>
+
+                <p class="muted">
+
+                    <strong>
+                        Why this fits:
+                    </strong>
+
+                    ${reason}
+
+                </p>
+
+                <div>
+
+                    ${product.tags.map(
+                        tag =>
+                            `<span class="tag">${tag}</span>`
+                    ).join("")}
+
+                </div>
+
+                <br>
+
+                <strong>
+
+                    ${
+                        product.stock > 0
+                            ? "✅ In stock"
+                            : "❌ Out of stock"
+                    }
+
+                </strong>
+
+                <br><br>
+
+                <button
+                    class="success-btn"
+                    onclick="addToCart('${product.id}')"
+                    ${
+                        product.stock <= 0
+                            ? "disabled"
+                            : ""
+                    }
+                >
+                    Add to Cart
+                </button>
+
+            </div>
+
+        `;
+
+
+        section.classList.remove("hidden");
+
+    }
+
+
+    // =========================================================
+    // CONTEXTUAL UPSELL
+    // =========================================================
+
+    async function loadUpsell(productId) {
+
+        const section =
+            document.getElementById(
+                "upsellSection"
+            );
+
+
+        const card =
+            document.getElementById(
+                "upsellCard"
+            );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/upsell",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                product_id:
+                                    productId
+                            })
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Upsell API returned HTTP " +
+                    response.status
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "Upsell response:",
+                data
+            );
+
+
+            if (
+                !data.success ||
+                !data.upsell_options ||
+                data.upsell_options.length === 0
+            ) {
+
+                section.classList.add("hidden");
+
+                return;
+            }
+
+
+            const upsell =
+                data.upsell_options[0];
+
+
+            const category =
+                upsell.category ||
+                "related products";
+
+
+            card.innerHTML = `
+
+                <div class="upsell-card">
+
+                    <div class="upsell-header">
+                        🤖 AI found something that may complement your purchase.
+                    </div>
+
+                    <div class="upsell-question">
+
+                        Would you also like to explore
+
+                        <strong>
+                            ${category}
+                        </strong>?
+
+                    </div>
+
+                    <div class="upsell-product">
+
+                        <h3>
+                            ${upsell.name}
+                        </h3>
+
+                        <div class="upsell-category">
+                            ${category}
+                        </div>
+
+                        <div class="price">
+                            ${formatPrice(upsell.price)}
+                        </div>
+
+                        <p class="muted">
+                            ${upsell.reason}
+                        </p>
+
+                        <div class="upsell-actions">
+
+                            <button
+                                class="success-btn"
+                                onclick="acceptUpsell('${upsell.id}')"
+                            >
+                                + Add ${formatPrice(upsell.price)}
+                            </button>
+
+                            <button
+                                class="outline-btn"
+                                onclick="declineUpsell()"
+                            >
+                                No Thanks
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            section.classList.remove("hidden");
+
+
+        } catch (error) {
+
+            console.error(
+                "Upsell error:",
+                error
+            );
+
+
+            section.classList.add("hidden");
+
+        }
+
+    }
+        // =========================================================
+    // ACCEPT UPSELL
+    // =========================================================
+
+    async function acceptUpsell(
+        productId
+    ) {
+
+        const product =
+            await getProduct(productId);
+
+
+        if (!product) {
+
+            showMessage(
+                "Upsell product not found.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        // Record AI cross-sell value.
+
+        aiCrossSellValue +=
+            Number(product.price);
+
+
+        await addToCart(productId);
+
+
+        updateRevenueImpact();
+
+
+        const section =
+            document.getElementById(
+                "upsellSection"
+            );
+
+
+        section.classList.add("hidden");
+
+
+        showMessage(
+            `✅ ${product.name} added through AI cross-sell.`,
+            "success"
+        );
+
+    }
+
+
+    // =========================================================
+    // DECLINE UPSELL
+    // =========================================================
+
+    function declineUpsell() {
+
+        const section =
+            document.getElementById(
+                "upsellSection"
+            );
+
+
+        section.classList.add("hidden");
+
+
+        showMessage(
+            "No problem. You can continue with your selected product.",
+            "info"
+        );
+
+    }
+
+
+    // =========================================================
+    // AI REVENUE IMPACT
+    // =========================================================
+
+    function updateRevenueImpact() {
+
+        const section =
+            document.getElementById(
+                "revenueImpactSection"
+            );
+
+
+        const originalElement =
+            document.getElementById(
+                "originalPurchaseValue"
+            );
+
+
+        const crossSellElement =
+            document.getElementById(
+                "aiCrossSellValue"
+            );
+
+
+        const updatedElement =
+            document.getElementById(
+                "updatedBasketValue"
+            );
+
+
+        const increaseElement =
+            document.getElementById(
+                "basketIncreaseValue"
+            );
+
+
+        if (
+            basePurchaseValue <= 0 ||
+            aiCrossSellValue <= 0
+        ) {
+
+            section.classList.add("hidden");
+
+            return;
+        }
+
+
+        let currentCartTotal = 0;
+
+
+        cart.forEach(item => {
+
+            currentCartTotal +=
+                Number(item.price) *
+                Number(item.quantity);
+
+        });
+
+
+        const basketIncrease =
+            (
+                aiCrossSellValue /
+                basePurchaseValue
+            ) * 100;
+
+
+        originalElement.innerText =
+            formatPrice(
+                basePurchaseValue
+            );
+
+
+        crossSellElement.innerText =
+            formatPrice(
+                aiCrossSellValue
+            );
+
+
+        updatedElement.innerText =
+            formatPrice(
+                currentCartTotal
+            );
+
+
+        increaseElement.innerText =
+            `Basket increase: +${basketIncrease.toFixed(1)}%`;
+
+
+        section.classList.remove("hidden");
+
+    }
+
+
+    // =========================================================
+    // GET PRODUCT
+    // =========================================================
+
+    async function getProduct(
+        productId
+    ) {
+
+        const response =
+            await fetch("/products");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load products."
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        return data.products.find(
+            product =>
+                product.id === productId
+        );
+
+    }
+
+
+    // =========================================================
+    // ADD TO CART
+    // =========================================================
+
+    async function addToCart(
+        productId
+    ) {
+
+        try {
+
+            const product =
+                await getProduct(
+                    productId
+                );
+
+
+            if (!product) {
+
+                showMessage(
+                    "Product not found.",
+                    "error"
+                );
+
+                return false;
+            }
+
+
+            if (product.stock <= 0) {
+
+                showMessage(
+                    "Product is out of stock.",
+                    "error"
+                );
+
+                return false;
+            }
+
+
+            const existing =
+                cart.find(
+                    item =>
+                        item.product_id === productId
+                );
+
+
+            if (existing) {
+
+                if (
+                    existing.quantity >=
+                    product.stock
+                ) {
+
+                    showMessage(
+                        "Maximum available stock reached.",
+                        "error"
+                    );
+
+                    return false;
+                }
+
+
+                existing.quantity += 1;
+
+
+            } else {
+
+                cart.push({
+
+                    product_id:
+                        product.id,
+
+                    name:
+                        product.name,
+
+                    price:
+                        Number(product.price),
+
+                    quantity:
+                        1,
+
+                    stock:
+                        Number(product.stock)
+
+                });
+
+            }
+
+
+            renderCart();
+
+
+            showMessage(
+                `${product.name} added to cart.`,
+                "success"
+            );
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Add to cart error:",
+                error
+            );
+
+
+            showMessage(
+                "❌ Unable to add product to cart.",
+                "error"
+            );
+
+
+            return false;
+        }
+
+    }
+
+
+    // =========================================================
+    // CHANGE QUANTITY
+    // =========================================================
+
+    function changeQuantity(
+        productId,
+        change
+    ) {
+
+        const item =
+            cart.find(
+                item =>
+                    item.product_id === productId
+            );
+
+
+        if (!item) {
+            return;
+        }
+
+
+        const newQuantity =
+            item.quantity +
+            change;
+
+
+        if (newQuantity <= 0) {
+
+            cart =
+                cart.filter(
+                    item =>
+                        item.product_id !== productId
+                );
+
+
+        } else if (
+            newQuantity <= item.stock
+        ) {
+
+            item.quantity =
+                newQuantity;
+
+
+        } else {
+
+            showMessage(
+                "Cannot exceed available stock.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        renderCart();
+
+    }
+
+
+    // =========================================================
+    // RENDER CART
+    // =========================================================
+
+    function renderCart() {
+
+        const container =
+            document.getElementById(
+                "cartItems"
+            );
+
+
+        const totalElement =
+            document.getElementById(
+                "cartTotal"
+            );
+
+
+        const payButton =
+            document.getElementById(
+                "payButton"
+            );
+
+
+        if (cart.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="empty">
+                    Your cart is empty.
+                </div>
+
+            `;
+
+
+            totalElement.innerText =
+                "₹0";
+
+
+            payButton.innerText =
+                "Pay ₹0";
+
+
+            payButton.disabled = true;
+
+
+            updateRevenueImpact();
+
+
+            return;
+        }
+
+
+        let total = 0;
+
+
+        container.innerHTML =
+            cart.map(item => {
+
+                const itemTotal =
+                    Number(item.price) *
+                    Number(item.quantity);
+
+
+                total += itemTotal;
+
+
+                return `
+
+                    <div class="cart-item">
+
+                        <div class="cart-info">
+
+                            <div class="cart-name">
+                                ${item.name}
+                            </div>
+
+                            <div class="muted">
+                                ${formatPrice(item.price)}
+                                each
+                            </div>
+
+                            <div class="quantity-controls">
+
+                                <button
+                                    class="secondary"
+                                    onclick="
+                                        changeQuantity(
+                                            '${item.product_id}',
+                                            -1
+                                        )
+                                    "
+                                >
+                                    −
+                                </button>
+
+                                <span>
+                                    ${item.quantity}
+                                </span>
+
+                                <button
+                                    class="secondary"
+                                    onclick="
+                                        changeQuantity(
+                                            '${item.product_id}',
+                                            1
+                                        )
+                                    "
+                                >
+                                    +
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <strong>
+                            ${formatPrice(itemTotal)}
+                        </strong>
+
+                    </div>
+
+                `;
+
+            }).join("");
+
+
+        totalElement.innerText =
+            formatPrice(total);
+
+
+        payButton.innerText =
+            `Pay ${formatPrice(total)}`;
+
+
+        payButton.disabled = false;
+
+
+        updateRevenueImpact();
+
+    }
+
+
+    // =========================================================
+    // RETRY PAYMENT
+    // =========================================================
+
+    async function retryPayment() {
+
+        if (cart.length === 0) {
+
+            showMessage(
+                "Your cart is empty.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const retrySection =
+            document.getElementById(
+                "retrySection"
+            );
+
+
+        if (retrySection) {
+
+            retrySection.style.display =
+                "none";
+
+        }
+
+
+        showMessage(
+            "🔄 Creating a new payment attempt...",
+            "info"
+        );
+
+
+        await startPayment();
+
+    }
+
+
+    // =========================================================
+    // PAYMENT
+    // =========================================================
+
+    async function startPayment() {
+
+        if (cart.length === 0) {
+
+            showMessage(
+                "Your cart is empty.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const payButton =
+            document.getElementById(
+                "payButton"
+            );
+
+
+        const orderStatus =
+            document.getElementById(
+                "orderStatus"
+            );
+
+
+        const retrySection =
+            document.getElementById(
+                "retrySection"
+            );
+
+
+        if (retrySection) {
+
+            retrySection.style.display =
+                "none";
+
+        }
+
+
+        if (payButton) {
+
+            payButton.disabled = true;
+
+            payButton.innerText =
+                "Processing...";
+
+        }
+
+
+        showMessage(
+            "🔐 Creating secure payment order...",
+            "info"
+        );
+
+
+        orderStatus.innerText =
+            "Creating order...";
+
+
+        try {
+
+            /*
+             * Only product IDs and quantities
+             * are sent to backend.
+             *
+             * Backend calculates actual prices.
+             */
+
+            const items =
+                cart.map(item => ({
+
+                    product_id:
+                        item.product_id,
+
+                    quantity:
+                        item.quantity
+
+                }));
+
+
+            const response =
+                await fetch(
+                    "/payment/create",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                items: items
+                            })
+
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Payment API returned HTTP " +
+                    response.status
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "Payment order:",
+                data
+            );
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.message ||
+                    "Unable to create payment order."
+                );
+
+            }
+
+
+            const order =
+                data.order;
+
+
+            const payment =
+                data.payment;
+
+
+            orderStatus.innerHTML = `
+
+                <div class="status-card">
+
+                    <strong>
+                        Order:
+                    </strong>
+
+                    ${order.order_id}
+
+                    <br><br>
+
+                    <strong>
+                        Amount:
+                    </strong>
+
+                    ${formatPrice(order.amount)}
+
+                    <br><br>
+
+                    <strong>
+                        Status:
+                    </strong>
+
+                    ${order.status}
+
+                </div>
+
+            `;
+
+
+            // =================================================
+            // RAZORPAY CHECKOUT
+            // =================================================
+
+            const options = {
+
+                key:
+                    payment.razorpay_key_id,
+
+                amount:
+                    payment.amount,
+
+                currency:
+                    payment.currency,
+
+                name:
+                    "AI Merchant Revenue Agent",
+
+                description:
+                    "AI-powered merchant purchase",
+
+                order_id:
+                    payment.razorpay_order_id,
+
+
+                handler:
+                    async function (
+                        razorpayResponse
+                    ) {
+
+                        showMessage(
+                            "🔐 Verifying payment...",
+                            "info"
+                        );
+
+
+                        orderStatus.innerHTML = `
+
+                            <div class="status-card">
+
+                                <div class="status-icon">
+                                    🔐
+                                </div>
+
+                                <h3>
+                                    Verifying Payment
+                                </h3>
+
+                                <p>
+                                    Please wait while the
+                                    server verifies the transaction.
+                                </p>
+
+                            </div>
+
+                        `;
+
+
+                        try {
+
+                            const verifyResponse =
+                                await fetch(
+                                    "/payment/verify",
+                                    {
+
+                                        method: "POST",
+
+                                        headers: {
+                                            "Content-Type":
+                                                "application/json"
+                                        },
+
+                                        body:
+                                            JSON.stringify({
+
+                                                razorpay_order_id:
+                                                    razorpayResponse
+                                                        .razorpay_order_id,
+
+                                                razorpay_payment_id:
+                                                    razorpayResponse
+                                                        .razorpay_payment_id,
+
+                                                razorpay_signature:
+                                                    razorpayResponse
+                                                        .razorpay_signature
+
+                                            })
+
+                                    }
+                                );
+
+
+                            if (!verifyResponse.ok) {
+
+                                throw new Error(
+                                    "Verification API returned HTTP " +
+                                    verifyResponse.status
+                                );
+
+                            }
+
+
+                            const result =
+                                await verifyResponse.json();
+
+
+                            console.log(
+                                "Verification result:",
+                                result
+                            );
+
+
+                            if (result.success) {
+
+                                showMessage(
+                                    "✅ Payment successful! Order is PAID.",
+                                    "success"
+                                );
+
+
+                                orderStatus.innerHTML = `
+
+                                    <div
+                                        class="status-card success"
+                                    >
+
+                                        <div class="status-icon">
+                                            ✅
+                                        </div>
+
+                                        <h3>
+                                            Payment Successful
+                                        </h3>
+
+                                        <p>
+                                            <strong>
+                                                Order:
+                                            </strong>
+
+                                            ${result.order.order_id}
+
+                                        </p>
+
+                                        <p>
+
+                                            <strong>
+                                                Amount:
+                                            </strong>
+
+                                            ${formatPrice(
+                                                result.order.amount
+                                            )}
+
+                                        </p>
+
+                                        <p>
+
+                                            <strong>
+                                                Status:
+                                            </strong>
+
+                                            <span
+                                                style="color:green"
+                                            >
+                                                ✅ PAID
+                                            </span>
+
+                                        </p>
+
+                                        <p>
+
+                                            <strong>
+                                                Payment ID:
+                                            </strong>
+
+                                            ${result.razorpay_payment_id}
+
+                                        </p>
+
+                                    </div>
+
+                                `;
+
+
+                                if (retrySection) {
+
+                                    retrySection.style.display =
+                                        "none";
+
+                                }
+
+
+                            } else {
+
+                                showMessage(
+                                    "❌ Payment verification failed.",
+                                    "error"
+                                );
+
+
+                                orderStatus.innerHTML = `
+
+                                    <div
+                                        class="status-card error"
+                                    >
+
+                                        <div class="status-icon">
+                                            ❌
+                                        </div>
+
+                                        <h3>
+                                            Payment Verification Failed
+                                        </h3>
+
+                                        <p>
+                                            ${
+                                                result.message ||
+                                                "The payment could not be verified."
+                                            }
+                                        </p>
+
+                                    </div>
+
+                                `;
+
+
+                                if (retrySection) {
+
+                                    retrySection.style.display =
+                                        "block";
+
+                                }
+
+                            }
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "Verification error:",
+                                error
+                            );
+
+
+                            showMessage(
+                                "❌ Payment verification failed.",
+                                "error"
+                            );
+
+
+                            orderStatus.innerHTML = `
+
+                                <div
+                                    class="status-card error"
+                                >
+
+                                    <div class="status-icon">
+                                        ❌
+                                    </div>
+
+                                    <h3>
+                                        Payment Verification Failed
+                                    </h3>
+
+                                    <p>
+                                        The payment could not be verified.
+                                    </p>
+
+                                </div>
+
+                            `;
+
+
+                            if (retrySection) {
+
+                                retrySection.style.display =
+                                    "block";
+
+                            }
+
+                        }
+
+
+                        if (payButton) {
+
+                            payButton.disabled = false;
+
+
+                            payButton.innerText =
+                                `Pay ${formatPrice(
+                                    cart.reduce(
+                                        (
+                                            sum,
+                                            item
+                                        ) =>
+                                            sum +
+                                            Number(
+                                                item.price
+                                            ) *
+                                            Number(
+                                                item.quantity
+                                            ),
+                                        0
+                                    )
+                                )}`;
+
+                        }
+
+                    },
+                                    modal: {
+
+                    ondismiss:
+                        function () {
+
+                            showMessage(
+                                "Payment window closed.",
+                                "info"
+                            );
+
+
+                            orderStatus.innerHTML = `
+
+                                <div
+                                    class="status-card warning"
+                                >
+
+                                    <div class="status-icon">
+                                        ⚠️
+                                    </div>
+
+                                    <h3>
+                                        Payment Cancelled
+                                    </h3>
+
+                                    <p>
+                                        Your order is still pending.
+                                        You can try the payment again.
+                                    </p>
+
+                                </div>
+
+                            `;
+
+
+                            if (retrySection) {
+
+                                retrySection.style.display =
+                                    "block";
+
+                            }
+
+
+                            if (payButton) {
+
+                                payButton.disabled =
+                                    false;
+
+
+                                payButton.innerText =
+                                    `Pay ${formatPrice(
+                                        cart.reduce(
+                                            (
+                                                sum,
+                                                item
+                                            ) =>
+                                                sum +
+                                                Number(
+                                                    item.price
+                                                ) *
+                                                Number(
+                                                    item.quantity
+                                                ),
+                                            0
+                                        )
+                                    )}`;
+
+                            }
+
+                        }
+
+                },
+
+
+                theme: {
+                    color: "#111827"
+                }
+
+            };
+
+
+            const razorpay =
+                new Razorpay(
+                    options
+                );
+
+
+            // =================================================
+            // PAYMENT FAILED EVENT
+            // =================================================
+
+            razorpay.on(
+                "payment.failed",
+                function (response) {
+
+                    console.error(
+                        "Razorpay payment failed:",
+                        response
+                    );
+
+
+                    let description =
+                        "Payment failed.";
+
+
+                    if (
+                        response &&
+                        response.error &&
+                        response.error.description
+                    ) {
+
+                        description +=
+                            " " +
+                            response.error.description;
+
+                    }
+
+
+                    showMessage(
+                        "❌ " +
+                        description,
+                        "error"
+                    );
+
+
+                    orderStatus.innerHTML = `
+
+                        <div
+                            class="status-card error"
+                        >
+
+                            <div class="status-icon">
+                                ❌
+                            </div>
+
+                            <h3>
+                                Payment Failed
+                            </h3>
+
+                            <p>
+                                ${description}
+                            </p>
+
+                            <p>
+                                Your order is still pending.
+                                You can safely try the payment again.
+                            </p>
+
+                        </div>
+
+                    `;
+
+
+                    if (retrySection) {
+
+                        retrySection.style.display =
+                            "block";
+
+                    }
+
+
+                    if (payButton) {
+
+                        payButton.disabled =
+                            false;
+
+
+                        payButton.innerText =
+                            `Pay ${formatPrice(
+                                cart.reduce(
+                                    (
+                                        sum,
+                                        item
+                                    ) =>
+                                        sum +
+                                        Number(
+                                            item.price
+                                        ) *
+                                        Number(
+                                            item.quantity
+                                        ),
+                                    0
+                                )
+                            )}`;
+
+                    }
+
+                }
+            );
+
+
+            razorpay.open();
+
+
+        } catch (error) {
+
+            console.error(
+                "Payment creation error:",
+                error
+            );
+
+
+            showMessage(
+                "❌ " +
+                (
+                    error.message ||
+                    "Unable to start payment."
+                ),
+                "error"
+            );
+
+
+            orderStatus.innerHTML = `
+
+                <div
+                    class="status-card error"
+                >
+
+                    <div class="status-icon">
+                        ❌
+                    </div>
+
+                    <h3>
+                        Unable to Start Payment
+                    </h3>
+
+                    <p>
+                        ${
+                            error.message ||
+                            "Something went wrong while creating the payment."
+                        }
+                    </p>
+
+                </div>
+
+            `;
+
+
+            if (retrySection) {
+
+                retrySection.style.display =
+                    "block";
+
+            }
+
+
+            if (payButton) {
+
+                payButton.disabled =
+                    false;
+
+
+                payButton.innerText =
+                    `Pay ${formatPrice(
+                        cart.reduce(
+                            (
+                                sum,
+                                item
+                            ) =>
+                                sum +
+                                Number(
+                                    item.price
+                                ) *
+                                Number(
+                                    item.quantity
+                                ),
+                            0
+                        )
+                    )}`;
+
+            }
+
+        }
+
+    }
+
+
+    // =========================================================
+    // INITIAL CART
+    // =========================================================
+
+    renderCart();
+
+</script>
+
+</body>
+</html>

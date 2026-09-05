@@ -1,0 +1,264 @@
+[
+  {
+    "id": "P001",
+    "name": "SoundMax Wireless Headphones",
+    "category": "Audio",
+    "price": 2499,
+    "stock": 20,
+    "description": "Wireless headphones with 40-hour battery life, suitable for studying, music and gaming.",
+    "tags": [
+      "study",
+      "music",
+      "gaming",
+      "audio",
+      "wireless"
+    ],
+    "related_products": [
+      "P002"
+    ]
+  },
+  {
+    "id": "P002",
+    "name": "Premium Headphone Stand",
+    "category": "Accessories",
+    "price": 499,
+    "stock": 30,
+    "description": "Desk stand designed for headphones and suitable for organized study and work setups.",
+    "tags": [
+      "study",
+      "desk",
+      "audio",
+      "accessories"
+    ],
+    "related_products": []
+  },
+  {
+    "id": "P003",
+    "name": "TechPro Wireless Mouse",
+    "category": "Accessories",
+    "price": 799,
+    "stock": 25,
+    "description": "Ergonomic wireless mouse suitable for laptops and desktop computers, especially for coding and office work.",
+    "tags": [
+      "coding",
+      "office",
+      "study",
+      "accessories",
+      "wireless"
+    ],
+    "related_products": [
+      "P002"
+    ]
+  },
+  {
+    "id": "P004",
+    "name": "CodeBook Laptop 14",
+    "category": "Laptops",
+    "price": 55999,
+    "stock": 10,
+    "description": "14-inch laptop designed for programming, college work and productivity.",
+    "tags": [
+      "coding",
+      "student",
+      "programming",
+      "laptop",
+      "productivity"
+    ],
+    "related_products": [
+      "P003",
+      "P006"
+    ]
+  },
+  {
+    "id": "P005",
+    "name": "UltraView 24 Monitor",
+    "category": "Monitors",
+    "price": 11999,
+    "stock": 15,
+    "description": "24-inch Full HD monitor suitable for coding, studying and office work.",
+    "tags": [
+      "coding",
+      "study",
+      "office",
+      "monitor",
+      "productivity"
+    ],
+    "related_products": [
+      "P003",
+      "P007"
+    ]
+  },
+  {
+    "id": "P006",
+    "name": "TypePro Mechanical Keyboard",
+    "category": "Keyboards",
+    "price": 2299,
+    "stock": 18,
+    "description": "Mechanical keyboard designed for programming, gaming and long typing sessions.",
+    "tags": [
+      "coding",
+      "programming",
+      "gaming",
+      "typing",
+      "keyboard"
+    ],
+    "related_products": [
+      "P003",
+      "P008"
+    ]
+  },
+  {
+    "id": "P007",
+    "name": "ErgoDesk Mouse Pad",
+    "category": "Accessories",
+    "price": 399,
+    "stock": 40,
+    "description": "Large ergonomic mouse pad designed for comfortable coding, office work and gaming.",
+    "tags": [
+      "coding",
+      "office",
+      "gaming",
+      "desk",
+      "accessories"
+    ],
+    "related_products": []
+  },
+  {
+    "id": "P008",
+    "name": "VisionLight Monitor Lamp",
+    "category": "Accessories",
+    "price": 1299,
+    "stock": 22,
+    "description": "Adjustable monitor lamp designed to improve desk lighting for study and work.",
+    "tags": [
+      "study",
+      "office",
+      "desk",
+      "monitor",
+      "lighting"
+    ],
+    "related_products": []
+  },
+  {
+    "id": "P009",
+    "name": "PowerHub USB-C Dock",
+    "category": "Accessories",
+    "price": 3499,
+    "stock": 12,
+    "description": "USB-C docking station with multiple ports for laptops, monitors and external devices.",
+    "tags": [
+      "laptop",
+      "usb",
+      "usb-c",
+      "office",
+      "productivity"
+    ],
+    "related_products": [
+      "P005",
+      "P003"
+    ]
+  },
+  {
+    "id": "P010",
+    "name": "StudyTab Tablet 10",
+    "category": "Tablets",
+    "price": 18999,
+    "stock": 14,
+    "description": "10-inch tablet designed for online classes, note-taking, reading and entertainment.",
+    "tags": [
+      "study",
+      "student",
+      "tablet",
+      "reading",
+      "online classes"
+    ],
+    "related_products": [
+      "P011",
+      "P012"
+    ]
+  },
+  {
+    "id": "P011",
+    "name": "NotePro Stylus Pen",
+    "category": "Accessories",
+    "price": 999,
+    "stock": 35,
+    "description": "Precision stylus designed for digital notes, drawing and tablet-based learning.",
+    "tags": [
+      "study",
+      "student",
+      "tablet",
+      "notes",
+      "stylus"
+    ],
+    "related_products": []
+  },
+  {
+    "id": "P012",
+    "name": "TabGuard Protective Cover",
+    "category": "Accessories",
+    "price": 699,
+    "stock": 28,
+    "description": "Protective tablet cover designed for students and everyday mobile use.",
+    "tags": [
+      "tablet",
+      "student",
+      "protection",
+      "study",
+      "accessories"
+    ],
+    "related_products": []
+  },
+  {
+    "id": "P013",
+    "name": "SmartOffice Webcam Pro",
+    "category": "Webcams",
+    "price": 2999,
+    "stock": 16,
+    "description": "Full HD webcam suitable for online classes, meetings, interviews and remote work.",
+    "tags": [
+      "office",
+      "online classes",
+      "meetings",
+      "interview",
+      "webcam"
+    ],
+    "related_products": [
+      "P014"
+    ]
+  },
+  {
+    "id": "P014",
+    "name": "ClearVoice USB Microphone",
+    "category": "Audio",
+    "price": 2499,
+    "stock": 17,
+    "description": "USB microphone designed for online meetings, presentations, streaming and content creation.",
+    "tags": [
+      "microphone",
+      "audio",
+      "meetings",
+      "streaming",
+      "content creation"
+    ],
+    "related_products": [
+      "P013"
+    ]
+  },
+  {
+    "id": "P015",
+    "name": "DeskMate Cable Organizer",
+    "category": "Accessories",
+    "price": 299,
+    "stock": 50,
+    "description": "Cable management kit designed to keep study and office desks organized.",
+    "tags": [
+      "desk",
+      "office",
+      "study",
+      "cable management",
+      "accessories"
+    ],
+    "related_products": []
+  }
+]

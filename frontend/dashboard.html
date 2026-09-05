@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Merchant Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            background:
+                #f5f7fb;
+
+            color:
+                #1f2937;
+        }
+
+        .container {
+
+            max-width:
+                1200px;
+
+            margin:
+                auto;
+
+            padding:
+                30px 20px;
+        }
+
+        header {
+
+            margin-bottom:
+                30px;
+        }
+
+        header h1 {
+
+            margin:
+                0 0 8px;
+
+            font-size:
+                32px;
+        }
+
+        header p {
+
+            margin:
+                0;
+
+            color:
+                #6b7280;
+        }
+
+        .stats {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    1fr
+                );
+
+            gap:
+                18px;
+
+            margin-bottom:
+                25px;
+        }
+
+        .stat {
+
+            background:
+                white;
+
+            padding:
+                22px;
+
+            border-radius:
+                14px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,0.06);
+        }
+
+        .stat-title {
+
+            color:
+                #6b7280;
+
+            font-size:
+                14px;
+
+            margin-bottom:
+                10px;
+        }
+
+        .stat-value {
+
+            font-size:
+                28px;
+
+            font-weight:
+                bold;
+        }
+
+        .grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                25px;
+        }
+
+        .card {
+
+            background:
+                white;
+
+            border-radius:
+                14px;
+
+            padding:
+                24px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,0.06);
+        }
+
+        .card h2 {
+
+            margin-top:
+                0;
+        }
+
+        .order {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            padding:
+                14px 0;
+
+            border-bottom:
+                1px solid #eee;
+        }
+
+        .order-id {
+
+            font-weight:
+                bold;
+        }
+
+        .order-meta {
+
+            color:
+                #6b7280;
+
+            font-size:
+                13px;
+
+            margin-top:
+                4px;
+        }
+
+        .paid {
+
+            color:
+                #15803d;
+
+            font-weight:
+                bold;
+        }
+
+        .pending {
+
+            color:
+                #b45309;
+
+            font-weight:
+                bold;
+        }
+
+        .event {
+
+            padding:
+                12px 0;
+
+            border-bottom:
+                1px solid #eee;
+        }
+
+        .event-type {
+
+            font-weight:
+                bold;
+        }
+
+        .event-time {
+
+            color:
+                #9ca3af;
+
+            font-size:
+                12px;
+
+            margin-top:
+                4px;
+        }
+
+        .empty {
+
+            color:
+                #6b7280;
+
+            padding:
+                15px 0;
+        }
+
+        .back-button {
+
+            display:
+                inline-block;
+
+            margin-top:
+                25px;
+
+            padding:
+                12px 18px;
+
+            background:
+                #111827;
+
+            color:
+                white;
+
+            text-decoration:
+                none;
+
+            border-radius:
+                8px;
+
+            font-weight:
+                bold;
+        }
+
+        @media(max-width: 900px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+        }
+
+        @media(max-width: 500px) {
+
+            .stats {
+
+                grid-template-columns:
+                    1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <header>
+
+        <h1>
+            📊 Merchant Revenue Dashboard
+        </h1>
+
+        <p>
+            Monitor orders, payments and AI agent activity
+        </p>
+
+    </header>
+
+
+    <!-- ========================================= -->
+    <!-- SUMMARY -->
+    <!-- ========================================= -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Total Orders
+            </div>
+
+            <div
+                id="totalOrders"
+                class="stat-value"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Paid Orders
+            </div>
+
+            <div
+                id="paidOrders"
+                class="stat-value"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Total Revenue
+            </div>
+
+            <div
+                id="totalRevenue"
+                class="stat-value"
+            >
+                ₹0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Verified Payments
+            </div>
+
+            <div
+                id="verifiedPayments"
+                class="stat-value"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- DETAILS -->
+    <!-- ========================================= -->
+
+    <div class="grid">
+
+
+        <!-- RECENT ORDERS -->
+
+        <div class="card">
+
+            <h2>
+                🧾 Recent Orders
+            </h2>
+
+            <div id="orders">
+
+                <div class="empty">
+                    Loading orders...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AGENT ACTIVITY -->
+
+        <div class="card">
+
+            <h2>
+                🤖 Agent Activity
+            </h2>
+
+            <div id="events">
+
+                <div class="empty">
+                    Loading activity...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <a
+        href="/app"
+        class="back-button"
+    >
+        ← Back to AI Shopping Agent
+    </a>
+
+</div>
+
+
+<script>
+
+    function formatPrice(amount) {
+
+        return "₹" +
+            Number(amount)
+                .toLocaleString("en-IN");
+    }
+
+
+    function formatEventName(eventType) {
+
+        const names = {
+
+            "INTENT_PARSED":
+                "🧠 Customer intent understood",
+
+            "PRODUCT_RECOMMENDED":
+                "✨ Product recommended",
+
+            "ORDER_CREATED":
+                "🛒 Order created",
+
+            "PAYMENT_CREATED":
+                "💳 Payment created",
+
+            "PAYMENT_SIGNATURE_VERIFIED":
+                "🔐 Payment signature verified",
+
+            "PAYMENT_VERIFIED":
+                "✅ Payment verified",
+
+            "ORDER_PAID":
+                "💰 Order marked PAID",
+
+            "PAYMENT_SECURITY_FAILURE":
+                "🛡️ Payment security check failed"
+
+        };
+
+
+        return (
+            names[eventType]
+            || eventType
+        );
+    }
+
+
+    async function loadDashboard() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "/dashboard-data"
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Dashboard API failed."
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.message
+                    || "Unable to load dashboard."
+                );
+            }
+
+
+            // =============================================
+            // SUMMARY
+            // =============================================
+
+            document.getElementById(
+                "totalOrders"
+            ).innerText =
+                data.summary.total_orders;
+
+
+            document.getElementById(
+                "paidOrders"
+            ).innerText =
+                data.summary.paid_orders;
+
+
+            document.getElementById(
+                "totalRevenue"
+            ).innerText =
+                formatPrice(
+                    data.summary.total_revenue
+                );
+
+
+            document.getElementById(
+                "verifiedPayments"
+            ).innerText =
+                data.summary.verified_payments;
+
+
+            // =============================================
+            // ORDERS
+            // =============================================
+
+            const ordersContainer =
+                document.getElementById(
+                    "orders"
+                );
+
+
+            if (
+                data.recent_orders.length === 0
+            ) {
+
+                ordersContainer.innerHTML = `
+
+                    <div class="empty">
+                        No orders yet.
+                    </div>
+
+                `;
+
+            } else {
+
+                ordersContainer.innerHTML =
+                    data.recent_orders
+                        .map(order => `
+
+                            <div class="order">
+
+                                <div>
+
+                                    <div class="order-id">
+                                        ${order.order_id}
+                                    </div>
+
+                                    <div class="order-meta">
+                                        ${order.created_at}
+                                    </div>
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        ${formatPrice(order.amount)}
+                                    </strong>
+
+                                    <div class="${
+                                        order.status === "PAID"
+                                            ? "paid"
+                                            : "pending"
+                                    }">
+                                        ${order.status}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        `)
+                        .join("");
+
+            }
+
+
+            // =============================================
+            // EVENTS
+            // =============================================
+
+            const eventsContainer =
+                document.getElementById(
+                    "events"
+                );
+
+
+            if (
+                data.recent_events.length === 0
+            ) {
+
+                eventsContainer.innerHTML = `
+
+                    <div class="empty">
+                        No agent activity yet.
+                    </div>
+
+                `;
+
+            } else {
+
+                eventsContainer.innerHTML =
+                    data.recent_events
+                        .map(event => `
+
+                            <div class="event">
+
+                                <div class="event-type">
+                                    ${formatEventName(
+                                        event.event_type
+                                    )}
+                                </div>
+
+                                <div class="event-time">
+                                    ${event.timestamp}
+                                </div>
+
+                            </div>
+
+                        `)
+                        .join("");
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Dashboard error:",
+                error
+            );
+
+
+            document.getElementById(
+                "orders"
+            ).innerHTML = `
+
+                <div class="empty">
+                    ❌ ${error.message}
+                </div>
+
+            `;
+
+            document.getElementById(
+                "events"
+            ).innerHTML = `
+
+                <div class="empty">
+                    ❌ Unable to load agent activity.
+                </div>
+
+            `;
+        }
+    }
+
+
+    loadDashboard();
+
+</script>
+
+</body>
+
+</html>
